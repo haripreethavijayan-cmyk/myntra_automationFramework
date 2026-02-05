@@ -163,20 +163,60 @@ test.describe('Myntra Shopping Flow', () => {
         // Assert
         expect(calculatedTotal).toBe(totalAmount);  
     });   
+    
+    //  ----- TEST 4 ----- 
 
-    test('Adding product to wishlist and moving it to bag', async ({ page }) => {
-        {
-        // 1. Search and Select Product
-        await homePage.searchForProduct('Kids Shoes');
-        await page.waitForSelector('.results-base');
+    // test('Adding product to wishlist and moving it to bag', async ({ page }) => {
+    //     {
+    //     // 1. Search and Select Product
+    //     await homePage.searchForProduct('Kids Shoes');
+    //     await page.waitForSelector('.results-base');
 
-        const page1Promise = page.waitForEvent('popup');
-        await page.getByRole('link', { name: 'PUMA Unisex-Child Caracal V2 IDP Sneakers' }).first().click();
-        const page1 = await page1Promise;
-        await page1.waitForLoadState();
+    //     const page1Promise = page.waitForEvent('popup');
+    //     await page.getByRole('link', { name: 'PUMA Unisex-Child Caracal V2 IDP Sneakers' }).first().click();
+    //     const page1 = await page1Promise;
+    //     await page1.waitForLoadState();
 
-        }
+    //     }
+   // });
 
-    });
+   //  ----- TEST 5 -----
+
+   test ('Increasing the quantity and size of the product in the bag', async ({page}) => {
+    // 1. Search and Select Product 
+    await homePage.searchForProduct('Boy shoes')
+    await homePage.scrollToOffersSection();
+    await page.waitForSelector('.results-base');
+
+    const page1Promise = page.waitForEvent('popup');
+    await page.getByRole('link', { name: 'AVANT Kids Colourblocked Tan' }).click();
+  const page1 = await page1Promise;
+  await page1.getByRole('button', { name: '-6Y' }).click();
+  await page1.getByText('ADD TO BAG').click();
+  await page1.getByRole('link', { name: 'GO TO BAG' }).click();
+  await page1.getByText('Qty:').click();
+  await page1.getByText('3', { exact: true }).click();
+  await page1.locator('//*[@id="cartItemsList"]/div/div/div/div[2]/div[4]/div/button/div').click();
+  await page1.getByText('Size: 5.5-6Y').click();
+  await page1.getByText('-9Y').click();
+  await page1.getByRole('button', { name: 'DONE' }).click();
+});
+
+ //  ----- TEST 6 -----
+
+ test ('Removing the product from the bag', async ({page}) => {
+    // 1. Search and Select Product 
+    await homePage.searchForProduct('Decor')
+    await homePage.scrollToOffersSection();
+    await page.getByRole('link', { name: 'Chumbak Green & Yellow Photo' }).click();
+    const page1Promise = page.waitForEvent('popup');
+    const page1 = await page1Promise;
+    await page1.getByText('ADD TO BAG').click();
+    await page1.getByRole('link', { name: 'GO TO BAG' }).click();
+    await page1.getByRole('button', { name: 'REMOVE' }).click();
+    await page1.getByRole('dialog').getByRole('button', { name: 'REMOVE' }).click();
+ });
+
+ 
 });
 
