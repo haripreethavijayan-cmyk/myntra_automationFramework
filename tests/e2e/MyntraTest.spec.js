@@ -1,5 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const HomePage = require('../../Pages/homepage');
+const { AwardIcon } = require('lucide-react');
 
 test.describe('Myntra Shopping Flow', () => {
     let homePage;
@@ -166,19 +167,25 @@ test.describe('Myntra Shopping Flow', () => {
     
     //  ----- TEST 4 ----- 
 
-    // test('Adding product to wishlist and moving it to bag', async ({ page }) => {
-    //     {
-    //     // 1. Search and Select Product
-    //     await homePage.searchForProduct('Kids Shoes');
-    //     await page.waitForSelector('.results-base');
-
-    //     const page1Promise = page.waitForEvent('popup');
-    //     await page.getByRole('link', { name: 'PUMA Unisex-Child Caracal V2 IDP Sneakers' }).first().click();
-    //     const page1 = await page1Promise;
-    //     await page1.waitForLoadState();
-
-    //     }
-   // });
+    test('Adding product to wishlist and moving it to bag', async ({ page }) => {
+        {
+        // 1. Search and Select Product
+        await homePage.searchForProduct('32626246');
+        await page.waitForTimeout(5000); // Wait for search results to load
+        await page.getByRole('button', { name: '-1.5Y Rs. 298' }).click();
+        await page.getByText('ADD TO BAG').click();
+        await page.getByText('Bag', { exact: true }).click();
+        await page.getByRole('button', { name: 'MOVE TO WISHLIST' }).click();
+        await page.getByRole('dialog').getByRole('button', { name: 'MOVE TO WISHLIST' }).click();
+        await page.getByRole('link').first().click();
+        await page.locator('span').filter({ hasText: 'Wishlist' }).click();
+        await page.locator('//*[@id="item0"]/div[2]/div[2]/span/a').click();
+        await page.locator('//*[@id="item0"]/div[2]/div/div/div[3]/button[1]').click();
+        await page.locator('//*[@id="item0"]/div[2]/div/div/div[5]').click();
+        await page.locator('//*[@id="desktop-header-cnt"]/div[2]/div[2]/a[2]/span[3]').click();
+        await page.waitForTimeout(2000);
+        }
+   });
 
    //  ----- TEST 5 -----
 
@@ -217,6 +224,18 @@ test.describe('Myntra Shopping Flow', () => {
     await page1.getByRole('dialog').getByRole('button', { name: 'REMOVE' }).click();
  });
 
- 
+ // ----- TEST 7 -----
+
+ test('Applying a coupon code and verifying the discount', async ({page}) => {
+    // 1. Search and Select Product
+    await homePage.searchForProduct('32758019')
+    await homePage.scrollToOffersSection();
+    await page.getByRole('textbox', { name: 'Search for products, brands' }).press('Enter');
+    await page.getByText('ADD TO BAG').click();
+    await page.getByText('Bag', { exact: true }).click();
+    await page.getByRole('button', { name: 'APPLY' }).click();
+    await page.locator('#applyCoupon').click();
+ })
+
 });
 
