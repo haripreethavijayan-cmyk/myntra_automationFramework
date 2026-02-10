@@ -107,14 +107,14 @@ test.describe('Myntra Shopping Flow', () => {
         await homePage.scrollToOffersSection();
         await page.waitForTimeout(2000); // Wait for offers to load
         await page.locator('div:nth-child(8) > div > div > div > div > div:nth-child(4) > .container-base > div > .container-container > .row-base > .column-base > a > .img-responsive > .image-image').click();
-  const page1Promise = page.waitForEvent('popup');
-  await page.getByRole('link', { name: 'Timex His & Her Analogue Couple Watch Gift Set TW00ZP002 Timex His & Her' }).click();
-  const page1 = await page1Promise;
-  await page1.getByRole('link', { name: 'Green' }).click();
-  await page1.getByText('ADD TO BAG').click();
-  await page1.getByRole('link', { name: 'GO TO BAG' }).click();
+        const page1Promise = page.waitForEvent('popup');
+        await page.getByRole('link', { name: 'Timex His & Her Analogue Couple Watch Gift Set TW00ZP002 Timex His & Her' }).click();
+        const page1 = await page1Promise;
+        await page1.getByRole('link', { name: 'Green' }).click();
+        await page1.getByText('ADD TO BAG').click();
+        await page1.getByRole('link', { name: 'GO TO BAG' }).click();
 
-  await page1.waitForTimeout(3000);
+        await page1.waitForTimeout(3000);
 
         // Extract price details
         const getPrice = async (label) => {
@@ -197,13 +197,15 @@ test.describe('Myntra Shopping Flow', () => {
 
     const page1Promise = page.waitForEvent('popup');
     await page.getByRole('link', { name: 'AVANT Kids Colourblocked Tan' }).click();
-  const page1 = await page1Promise;
-  await page1.getByRole('button', { name: '-6Y' }).click();
+    const page1 = await page1Promise;
+    await page1.getByRole('button', { name: '-6Y' }).click();
   await page1.getByText('ADD TO BAG').click();
   await page1.getByRole('link', { name: 'GO TO BAG' }).click();
+  // Quantity Increase
   await page1.getByText('Qty:').click();
   await page1.getByText('3', { exact: true }).click();
   await page1.locator('//*[@id="cartItemsList"]/div/div/div/div[2]/div[4]/div/button/div').click();
+  //Size chnage
   await page1.getByText('Size: 5.5-6Y').click();
   await page1.getByText('-9Y').click();
   await page1.getByRole('button', { name: 'DONE' }).click();
@@ -236,6 +238,42 @@ test.describe('Myntra Shopping Flow', () => {
     await page.getByRole('button', { name: 'APPLY' }).click();
     await page.locator('#applyCoupon').click();
  })
+
+ // ----- TEST 8 -----
+
+ test('Using Credit Card discount and verifying the final price', async ({page}) => {
+    // 1. Search and Select Product
+    await homePage.searchForProduct('37796337')
+    await page.locator('//*[@id="mountRoot"]/div/div[1]/main/div[2]/div[2]/div[2]/div[2]/div/div[1]').click()
+    await page.locator('//*[@id="desktop-header-cnt"]/div[2]/div[2]/a[2]/span[1]').click();
+    await page.getByText('Show More').click();
+    await page.mouse.wheel(0, 800);
+    await page.getByRole('button', {name: 'PLACE ORDER'}).click();
+    await expect(page.getByText('326, Newchitrambalam Layout, Ponni Nagar,  P.N Palayam', 'Coimbatore, Tamil Nadu 641037')).toBeVisible();
+    await page.locator('#placeOrderButton').click();
+    await page.getByText('Credit/Debit Card').click();
+    await page.getByText('Show More').click();
+    await page.mouse.wheel(0, 800);
+    await page.waitForTimeout(2000);
+ });
+
+ // ----- TEST 9 -----
+
+    test('Creating gift card' , async ({page}) => {
+        await page.locator('span').nth(4).hover();
+        await page.locator('#desktop-header-cnt').getByRole('link', { name: 'Gift Cards' }).click();
+        await page.getByRole('button', { name: 'Send Gift Card' }).click();
+        await page.getByTestId('message').fill('Happy Married Life with lots of love and joy');
+        await page.getByRole('button', { name: 'NEXT' }).click();
+        await page.getByText('amount-amountInfo amount-hide').click();
+        await page.getByTestId('mobileNumber').fill('0000000000');
+        await page.getByTestId('email').fill('test@example.com');
+        await page.getByTestId('to').fill('Test User');
+        await page.getByRole('button', {name: 'Show Preview'}).click();
+        await page.locator('.preview-proceed').click();
+        await waitForTimeout(2000);
+
+    });
 
 });
 
